@@ -60,8 +60,19 @@ def run_DM(shmim_name='dm01disp', vmax=180.0, nbits=16):
 
     logger.info('Closing DM connection')
     dmhandle.close()
-    logger.info(f'Closing shared memory image {shmim}')
+    logger.info(f'Closing shared memory image {shmim_name}')
     shmim.close()
+
+def console_run_DM():
+    import argparse
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--shmim', '-s', type=str, default='dm01disp', help='Shared memory image to watch for commands. Default: dm01disp')
+    parser.add_argument('--vmax','-v', type=float, default=180.0,  help='Maximum voltage supposed by electronics. Default: 180 V')
+    parser.add_argument('--bits','-b', type=int, default=16,  help='Bit depth of DM electronics. Default: 16')
+    args = parser.parse_args()
+
+    run_DM(shmim_name=args.shmim, vmax=args.vmax, nbits=args.bits)
 
 
 def send_array(arr, dm, dm_map, dm_mask):
@@ -70,6 +81,9 @@ def send_array(arr, dm, dm_map, dm_mask):
     and send to DM sequentially
     '''
     vec = np.rint(dmutils.map_square_to_vector(arr, dm_map, dm_mask)).astype(np.uint16)
-    for i, val in enumerate(vec):
-        print(i, val)
-        dm.setMirror(mirror=i, dacSetting=val)
+    #for i, val in enumerate(vec):
+    #    #print(i, val)
+    #    dm.setMirror(mirror=i, dacSetting=val)
+
+    cmdlist = [dm.formatMirrorCommand(mirror=i, dacSetting=val) for (i,val) in enumerate(vec)]
+    dm.setChunks(cmdlist)
