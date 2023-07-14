@@ -47,6 +47,7 @@ class DM:
                 reply = self.ardconnect.read(self.ardconnect.in_waiting)
 #                print(reply.decode("utf-8"))
                 sys.stdout.write(reply.decode("utf-8"))
+                #logger.info(reply.decode("utf-8"))
             except serial.Timeout:
                 logger.info("Timeout trying to get data from buffer")
 
