@@ -40,7 +40,7 @@ setup(
 
     # add shell scripts here
     entry_points = {
-        'console_scripts': ['memsCtrl=memsCtrl.shinterface:console_dm_control',
+        'console_scripts': ['memsCtrl=memsCtrl.shminterface:console_run_DM',
                             ]
     },
     
