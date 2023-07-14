@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import serial
-import DMMap as dmap
+from . import DMMap as dmap
 import time
 import sys
 
@@ -56,12 +56,14 @@ class DM:
 #        print(ardCommand.encode())
         self.ardconnect.write(ardCommand.encode());
         # Now we can get a reply to make sure command we received and processed correctly
-#        reply = self.ardconnect.readline(); # this is blocking, but I have to test to see what I get back
-        try:
+        reply = self.ardconnect.readline(); # this is blocking, but I have to test to see what I get back
+        
+        '''try:
             reply = self.ardconnect.readall();  # with a 0.1s timeout this is now fast
             print(reply.decode());
         except serial.Timeout:
-            print("Timeout trying to get data from buffer.")
+            print("Timeout trying to get data from buffer.")'''
+
         # parse the reply and compare to the settings requested
         ### Put code here once I understand the reply and how to parse
         return reply.decode();  # I can return the reply as well
